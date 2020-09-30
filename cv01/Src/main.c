@@ -24,8 +24,8 @@
 
 int main(void)
 {
-	RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
-	GPIOA->MODER |= GPIO_MODER_MODER5_0;
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN;		//zapnuti pristupu k periferii hodin(citace)
+	GPIOA->MODER |= GPIO_MODER_MODER5_0;	//nastaveni modu pinu, nastaveni jako vystupni
 
     /* Loop forever */
 	for(;;){
