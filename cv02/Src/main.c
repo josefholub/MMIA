@@ -19,6 +19,9 @@
 #include "stm32f0xx.h"
 
 #define LED_TIME_BLINK 300		//casova konstanta
+#define BUTTON_DEBOUNCE 40
+#define LED_TIME_SHORT 100
+#define LED_TIME_LONG 1000
 
 static volatile uint32_t Tick;	//promenna casovace
 
@@ -51,6 +54,44 @@ void blikac(void)
 	}
 }
 
+void tlacitka(void)
+{
+	static uint32_t debounce1 = 0;
+	static uint32_t off_time1;
+	static uint32_t off_time2;
+
+	if (Tick > debounce1 + BUTTON_DEBOUNCE)
+	{
+		static uint32_t old_s2;					//puvodoni hodnota stavu vstpniho pinu S2
+		uint32_t new_s2  = GPIOC->IDR& (1<<0);	//aktualni hodnota stavu vstpniho pinu S2
+		debounce1 = Tick;						//prirazeni aktualniho casu pomoci Tick
+		if(old_s2 && !new_s2)					//falling edge
+		{
+			off_time2 = Tick + LED_TIME_SHORT;	//nastaveni vypinaciho casu
+			GPIOB->BSRR = (1<<0);				//rozsviceni LED2
+		}
+		old_s2 = new_s2;
+
+		static uint32_t old_s1;					//puvodoni hodnota stavu vstpniho pinu S1
+		uint32_t new_s1  = GPIOC->IDR& (1<<1);	//aktualni hodnota stavu vstpniho pinu S1
+		if(old_s1 && !new_s1)					//falling edge
+		{
+			off_time1 = Tick + LED_TIME_LONG;	//nastaveni vypinaciho casu
+			GPIOA->BSRR = (1<<4);				//rozsviceni LED1
+		}
+		old_s1 = new_s1;
+	}
+
+	if(Tick > off_time2)
+	{
+		GPIOB->BRR = (1<<0);					//vypnuti LED2
+	}
+	if(Tick > off_time1)
+	{
+		GPIOA->BRR = (1<<4);					//vypnuti LED1
+	}
+}
+
 int main(void)
 {
 	 RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN | RCC_AHBENR_GPIOCEN; // enable
@@ -73,5 +114,6 @@ int main(void)
 	for(;;)
 	{
 		blikac();
+		tlacitka();
 	}
 }
