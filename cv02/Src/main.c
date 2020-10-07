@@ -18,6 +18,10 @@
  */
 #include "stm32f0xx.h"
 
+#define LED_TIME_BLINK 300		//casova konstanta
+
+static volatile uint32_t Tick;	//promenna casovace
+
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
@@ -31,6 +35,22 @@ void EXTI0_1_IRQHandler(void)
 	}
 }
 
+void SysTick_Handler(void)			//vektor preruseni
+{
+	Tick++;							//kazdou ms se zvysi o 1
+}
+
+void blikac(void)
+{
+	static uint32_t delay;
+
+	if (Tick > delay + LED_TIME_BLINK)
+	{
+		GPIOA->ODR ^= (1<<4);
+		delay = Tick;
+	}
+}
+
 int main(void)
 {
 	 RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN | RCC_AHBENR_GPIOCEN; // enable
@@ -41,14 +61,17 @@ int main(void)
 
 	 RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
+	 SysTick_Config(8000); // 1ms
+
 	 SYSCFG->EXTICR[0] |= SYSCFG_EXTICR1_EXTI0_PC; // select PC0 for EXTI0
 	 EXTI->IMR |= EXTI_IMR_MR0; // mask
 	 EXTI->FTSR |= EXTI_FTSR_TR0; // trigger on falling edge
 	 NVIC_EnableIRQ(EXTI0_1_IRQn); // enable EXTI0_1
 
+
     /* Loop forever */
 	for(;;)
 	{
-
+		blikac();
 	}
 }
