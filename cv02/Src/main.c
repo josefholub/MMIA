@@ -20,6 +20,7 @@
 
 #define LED_TIME_BLINK 300		//casova konstanta
 #define BUTTON_DEBOUNCE 40
+#define BUTTON_DEBOUNCE_SHORT 5
 #define LED_TIME_SHORT 100
 #define LED_TIME_LONG 1000
 
@@ -57,20 +58,23 @@ void blikac(void)
 void tlacitka(void)
 {
 	static uint32_t debounce1 = 0;
+	static uint32_t debounce2 = 0;
 	static uint32_t off_time1;
 	static uint32_t off_time2;
 
 	if (Tick > debounce1 + BUTTON_DEBOUNCE)
 	{
-		static uint32_t old_s2;					//puvodoni hodnota stavu vstpniho pinu S2
-		uint32_t new_s2  = GPIOC->IDR& (1<<0);	//aktualni hodnota stavu vstpniho pinu S2
+//		static uint32_t old_s2;					//puvodoni hodnota stavu vstpniho pinu S2
+//		uint32_t new_s2  = GPIOC->IDR& (1<<0);	//aktualni hodnota stavu vstpniho pinu S2
 		debounce1 = Tick;						//prirazeni aktualniho casu pomoci Tick
-		if(old_s2 && !new_s2)					//falling edge
+
+/*		if(old_s2 && !new_s2)					//falling edge
 		{
 			off_time2 = Tick + LED_TIME_SHORT;	//nastaveni vypinaciho casu
 			GPIOB->BSRR = (1<<0);				//rozsviceni LED2
 		}
 		old_s2 = new_s2;
+*/
 
 		static uint32_t old_s1;					//puvodoni hodnota stavu vstpniho pinu S1
 		uint32_t new_s1  = GPIOC->IDR& (1<<1);	//aktualni hodnota stavu vstpniho pinu S1
@@ -80,6 +84,19 @@ void tlacitka(void)
 			GPIOA->BSRR = (1<<4);				//rozsviceni LED1
 		}
 		old_s1 = new_s1;
+	}
+
+	if (Tick > debounce2 + BUTTON_DEBOUNCE_SHORT)
+	{
+		static uint16_t debounce = 0xFFFF;				//nastaveni pomocne promenne na 1111.....11111
+
+		debounce <<= 1;									//posunuti po jednom bitu 111....110
+		if(GPIOC->IDR & (1<<1)) debounce |= 0x0001;		//stisk => 1111...1110; nestist => 111...111;
+		if(debounce == 0x8000)							//pokud bude stiskle tlacitko tak debounce = 100...000;
+		{
+			off_time2 = Tick + LED_TIME_LONG;
+			GPIOB->BSRR = (1<<0);						//rozsviceni LED2
+		}
 	}
 
 	if(Tick > off_time2)
