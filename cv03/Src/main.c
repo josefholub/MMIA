@@ -29,7 +29,7 @@ int main(void)
 	sct_led(0x7A5C36DE);
 	for(volatile uint32_t j = 0; j < 4000000; j++)
 	{
-		// cekani aby cislice byly citelne
+		// cekani aby se robrazilo bye citelne
 	}
 
     /* Loop forever */
@@ -40,7 +40,7 @@ int main(void)
 			sct_value(i);
 			for(volatile uint32_t j = 0; j < 1000000; j++)
 				{
-					// cekani
+					// cekani aby se cislice daly precist
 				}
 		}
 	}
