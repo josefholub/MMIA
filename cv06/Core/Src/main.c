@@ -174,7 +174,6 @@ int main(void)
   HAL_ADCEx_Calibration_Start(&hadc);
   HAL_ADC_Start(&hadc);
 
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -185,17 +184,43 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-/*	  OWConvertAll();				//zpusteni konverze
-	  HAL_Delay(CONVERT_T_DELAY);	//cekani definou dobu
-
+	  static uint32_t delay_prevod = 0;
+	  static uint32_t delay_tlacitka = 0;
 	  int16_t temp_18b20;
-	  OWReadTemperature(&temp_18b20);	//precteni teploty pomoci funkce z 1wire.c
 
-	  sct_value(temp_18b20 / 10);
-*/
+	  if(HAL_GetTick() > delay_prevod + 750)
+	  {
+		  OWConvertAll();
+		  OWReadTemperature(&temp_18b20);
+		  delay_prevod = HAL_GetTick();
+	  }
+	  if(HAL_GetTick() > delay_tlacitka + 40)
+	  {
+		  if(HAL_GPIO_ReadPin(S1_GPIO_Port, S1_Pin) == 0)			//tacitko S1
+		  {
+			  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 0);		//LED1 off
+			  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 1);		//LED2 on
+			  sct_value(temp_18b20 / 10);							//zobrazeni predem prevedene hodnoty
+			  delay_tlacitka = HAL_GetTick();
+		  }
+		  else if(HAL_GPIO_ReadPin(S2_GPIO_Port, S2_Pin) == 0)		//tacitko S2
+		  {
+			  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 1);		//LED1 on
+			  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 0);		//LED2 off
+			  sct_value(ntc_lookup[HAL_ADC_GetValue(&hadc)]);		//NTC prevod a zobrazeni
+			  delay_tlacitka = HAL_GetTick();
+		  }
+	  }
 
-	  sct_value(ntc_lookup[HAL_ADC_GetValue(&hadc)]);
+	  /*
+	  sct_value(ntc_lookup[HAL_ADC_GetValue(&hadc)]); 	//NTC prevod
 	  HAL_Delay(500);
+	  OWConvertAll();									//zpusteni konverze
+	  HAL_Delay(CONVERT_T_DELAY);						//cekani definou dobu
+	  int16_t temp_18b20;
+	  OWReadTemperature(&temp_18b20);					//precteni teploty pomoci funkce z 1wire.c
+	  sct_value(temp_18b20 / 10);
+	  */
 
   }
   /* USER CODE END 3 */
