@@ -150,6 +150,10 @@ int main(void)
 
   /* USER CODE END 2 */
 
+  const uint8_t code[] = {7, 9, 3, 2, 12};
+  uint8_t pos = 0;
+  uint32_t timeout = HAL_GetTick();
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -163,12 +167,37 @@ int main(void)
 	  HAL_Delay(250);
 	  */
 
-	  if(key != -1)
+	  if(key == code[0])
 	  {
-		  printf("stisknuto: %d\n", key);
-		  key = -1;
+		  timeout = HAL_GetTick();
 	  }
 
+	  if(key != -1)
+	  {
+		  if(key == code[pos])
+		  {
+			  pos++;
+			  printf("stisknuto: %d\n", key);
+			  key = -1;
+		  }
+		  else
+		  {
+			  pos = 0;
+			  printf("CHYBA!!!\n");
+			  key = -1;
+		  }
+	  }
+
+	  if(timeout > timeout+3000)
+	  {
+		  pos = 0;
+	  }
+
+	  if(pos > 4)
+	  {
+		  HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+		  pos = 0;
+	  }
   }
   /* USER CODE END 3 */
 }
