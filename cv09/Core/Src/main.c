@@ -90,6 +90,37 @@ void monstrosity(uint8_t radius)
 	}
 }
 
+void dis_monstrosity(uint8_t radius)
+{
+	for(uint16_t angle = 0; angle < 120; angle++)
+	{
+		static int8_t x = 0;
+		static int8_t y = 0;
+		float sx = radius*sin(angle);
+		float sy = radius*cos(angle);
+
+		int8_t dx = x - sx;
+		int8_t dy = y - sy;
+
+		step(dx, dy, 1);
+		x = dx;
+		y = dy;
+	}
+}
+
+void not_smile()
+{
+	monstrosity(60);
+	step(-90, 30, 0);
+	monstrosity(20);
+	step(60, 0, 0);
+	monstrosity(20);
+	step(-30, -10, 0);
+	step(0, -20, 1);
+	step(20, -10, 0);
+	dis_monstrosity(120);
+}
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -135,8 +166,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  do {HAL_Delay(40);} while(!HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin));
 
+	  do {HAL_Delay(40);} while(!HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin));
+	  not_smile();
+
+	  /*
 	  uint8_t buff[4];
 	  buff[0] = 0x01;         // stiskni leve tlacitko
 	  buff[1] = (int8_t)(10); // posun X +10
@@ -144,6 +178,7 @@ int main(void)
 	  buff[3] = 0;            // bez scrollu
 	  USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof(buff));
 	  HAL_Delay(USBD_HID_GetPollingInterval(&hUsbDeviceFS));
+	  */
 
     /* USER CODE END WHILE */
 
