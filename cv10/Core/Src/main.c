@@ -39,6 +39,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
+extern void tcpecho_init(void);
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -294,6 +296,9 @@ void StartDefaultTask(void const * argument)
   /* init code for LWIP */
   MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
+
+  tcpecho_init();
+
   /* Infinite loop */
   for(;;)
   {
