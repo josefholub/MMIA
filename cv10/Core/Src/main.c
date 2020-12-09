@@ -40,6 +40,7 @@
 /* USER CODE BEGIN PM */
 
 extern void tcpecho_init(void);
+extern void telnet_init(void);
 
 /* USER CODE END PM */
 
@@ -297,7 +298,11 @@ void StartDefaultTask(void const * argument)
   MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
 
+  /* Initalize tcp echo server */
   tcpecho_init();
+
+  /* Initalize telnet server */
+  telnet_init();
 
   /* Infinite loop */
   for(;;)

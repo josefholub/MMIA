@@ -28,6 +28,11 @@ endif
 
 -include ../makefile.defs
 
+BUILD_ARTIFACT_NAME := cv04
+BUILD_ARTIFACT_EXTENSION := elf
+BUILD_ARTIFACT_PREFIX := 
+BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
+
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
 cv04.elf \
@@ -43,7 +48,10 @@ cv04.bin \
 
 
 # All Target
-all: cv04.elf secondary-outputs
+all: main-build
+
+# Main-build Target
+main-build: cv04.elf secondary-outputs
 
 # Tool invocations
 cv04.elf: $(OBJS) $(USER_OBJS) D:\Documents\VUT\ FEKT\ BRNO\01\ FEKT\4\ YEAR\7\ SEMESTER\MKS\xholub39\MMIA\cv04\STM32F030R8TX_FLASH.ld
@@ -73,7 +81,14 @@ clean:
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
-.PHONY: all clean dependents
+fail-specified-linker-script-missing:
+	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
+	@exit 2
+
+warn-no-linker-script-specified:
+	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
+
+.PHONY: all clean dependents fail-specified-linker-script-missing warn-no-linker-script-specified
 .SECONDARY:
 
 -include ../makefile.targets
