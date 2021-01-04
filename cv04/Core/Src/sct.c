@@ -90,7 +90,7 @@ void sct_value(uint16_t value, uint8_t led)
 	reg |= reg_value[0][value / 100 % 10];		//stovky
 	reg |= reg_value[1][value / 10 % 10];		//desitky
 	reg |= reg_value[2][value / 1 % 10];		//jednotky
-	reg |= reg_value[3][led];
+	reg |= reg_value[3][led];					//led bar graf
 
 	sct_led(reg);
 }

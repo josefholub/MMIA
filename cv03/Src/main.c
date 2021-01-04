@@ -27,7 +27,7 @@ int main(void)
 {
 	sct_init();
 	sct_led(0x7A5C36DE);
-	for(volatile uint32_t j = 0; j < 4000000; j++)
+	for(volatile uint32_t j = 0; j < 400000; j++)
 	{
 		// cekani aby se robrazilo bye citelne
 	}
@@ -37,8 +37,8 @@ int main(void)
 	{
 		for(uint16_t i = 0; i < 1000; i += 111)
 		{
-			sct_value(i);
-			for(volatile uint32_t j = 0; j < 1000000; j++)
+			sct_value(i);										//zobrazovani postupne hodnot 000,111,222,...,999
+			for(volatile uint32_t j = 0; j < 100000; j++)
 				{
 					// cekani aby se cislice daly precist
 				}

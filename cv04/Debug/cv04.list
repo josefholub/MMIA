@@ -615,11 +615,11 @@ int main(void)
   sct_init();
  80004ba:	f000 fa95 	bl	80009e8 <sct_init>
 
-  HAL_ADCEx_Calibration_Start(&hadc);
+  HAL_ADCEx_Calibration_Start(&hadc);		//kalibrace ADC
  80004be:	4b4f      	ldr	r3, [pc, #316]	; (80005fc <main+0x15c>)
  80004c0:	0018      	movs	r0, r3
  80004c2:	f001 f86d 	bl	80015a0 <HAL_ADCEx_Calibration_Start>
-  HAL_ADC_Start_IT(&hadc);
+  HAL_ADC_Start_IT(&hadc);					//zapnuti ADC
  80004c6:	4b4d      	ldr	r3, [pc, #308]	; (80005fc <main+0x15c>)
  80004c8:	0018      	movs	r0, r3
  80004ca:	f000 fdb1 	bl	8001030 <HAL_ADC_Start_IT>

@@ -136,8 +136,8 @@ int main(void)
 
   sct_init();
 
-  HAL_ADCEx_Calibration_Start(&hadc);
-  HAL_ADC_Start_IT(&hadc);
+  HAL_ADCEx_Calibration_Start(&hadc);		//kalibrace ADC
+  HAL_ADC_Start_IT(&hadc);					//zapnuti ADC
 
   /* USER CODE END 2 */
 

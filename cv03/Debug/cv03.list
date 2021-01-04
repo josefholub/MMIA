@@ -243,7 +243,7 @@ int main(void)
  800022a:	4b18      	ldr	r3, [pc, #96]	; (800028c <main+0x6c>)
  800022c:	0018      	movs	r0, r3
  800022e:	f000 f835 	bl	800029c <sct_led>
-	for(volatile uint32_t j = 0; j < 4000000; j++)
+	for(volatile uint32_t j = 0; j < 400000; j++)
  8000232:	2300      	movs	r3, #0
  8000234:	60bb      	str	r3, [r7, #8]
  8000236:	e002      	b.n	800023e <main+0x1e>
@@ -266,13 +266,13 @@ int main(void)
  800024c:	801a      	strh	r2, [r3, #0]
  800024e:	e015      	b.n	800027c <main+0x5c>
 		{
-			sct_value(i);
+			sct_value(i);										//zobrazovani postupne hodnot 000,111,222,...,999
  8000250:	230e      	movs	r3, #14
  8000252:	18fb      	adds	r3, r7, r3
  8000254:	881b      	ldrh	r3, [r3, #0]
  8000256:	0018      	movs	r0, r3
  8000258:	f000 f874 	bl	8000344 <sct_value>
-			for(volatile uint32_t j = 0; j < 1000000; j++)
+			for(volatile uint32_t j = 0; j < 100000; j++)
  800025c:	2300      	movs	r3, #0
  800025e:	607b      	str	r3, [r7, #4]
  8000260:	e002      	b.n	8000268 <main+0x48>
@@ -299,8 +299,8 @@ int main(void)
  8000288:	e7dd      	b.n	8000246 <main+0x26>
  800028a:	46c0      	nop			; (mov r8, r8)
  800028c:	7a5c36de 	.word	0x7a5c36de
- 8000290:	003d08ff 	.word	0x003d08ff
- 8000294:	000f423f 	.word	0x000f423f
+ 8000290:	00061a7f 	.word	0x00061a7f
+ 8000294:	0001869f 	.word	0x0001869f
  8000298:	000003e7 	.word	0x000003e7
 
 0800029c <sct_led>:
@@ -426,10 +426,10 @@ void sct_value(uint16_t value)
 	},
 	};
 
-	uint32_t reg =0;
+	uint32_t reg = 0;
  8000350:	2300      	movs	r3, #0
  8000352:	60fb      	str	r3, [r7, #12]
-
+												//pozice
 	reg |= reg_value[0][value / 100 % 10];		//stovky
  8000354:	1dbb      	adds	r3, r7, #6
  8000356:	881b      	ldrh	r3, [r3, #0]

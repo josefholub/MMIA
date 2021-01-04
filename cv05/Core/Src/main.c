@@ -69,7 +69,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
-int _write(int file, char const *buf, int n)
+int _write(int file, char const *buf, int n)			//presmerovani write(printfu) do uartu
 {
 	/* stdout redirection to UART2 */
 	HAL_UART_Transmit(&huart2, (uint8_t*)(buf), n, HAL_MAX_DELAY);
@@ -242,7 +242,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  while(uart_rx_read_ptr != uart_rx_write_ptr)
+	  while(uart_rx_read_ptr != uart_rx_write_ptr)	//zpracovani jednotlivych bajtu z bufferu
 	  {
 		  uint8_t b = uart_rx_buf[uart_rx_read_ptr];
 		  if(++uart_rx_read_ptr >= RX_BUFFER_LEN) uart_rx_read_ptr = 0;

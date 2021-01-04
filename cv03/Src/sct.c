@@ -78,8 +78,8 @@ void sct_value(uint16_t value)
 	},
 	};
 
-	uint32_t reg =0;
-
+	uint32_t reg = 0;
+												//pozice
 	reg |= reg_value[0][value / 100 % 10];		//stovky
 	reg |= reg_value[1][value / 10 % 10];		//desitky
 	reg |= reg_value[2][value / 1 % 10];		//jednotky

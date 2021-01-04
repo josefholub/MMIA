@@ -32,12 +32,12 @@ int main(void)
 		uint32_t pole = 0b10101001110111011100101010000000;
 
 		for(uint8_t i=0; i<32; i++){
-			if(pole & 0x80000000) GPIOA->BSRR = (1<<5); //0x80000000 = 0b 1000 0000 0000 0000 0000 0000 0000 0000
-			else GPIOA->BRR = (1<<5);
+			if(pole & 0x80000000) GPIOA->BSRR = (1<<5); //0x80000000 = 0b 1000 0000 0000 0000 0000 0000 0000 0000; GPIOA->BSRR = (1<<5); => nastaveni PA5
+			else GPIOA->BRR = (1<<5);					//GPIOA->BRR = (1<<5); => nulovani PA5
 
-		pole <<= 1;
+		pole <<= 1;										//posun pole vlevo, z prava se plni nulami
 
-		for (volatile uint32_t i = 0; i < 100000; i++) {}
+		for (volatile uint32_t i = 0; i < 100000; i++) {}	//cekani 100000 cyklu
 		}
 	}
 }
